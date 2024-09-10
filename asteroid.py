@@ -20,6 +20,7 @@ class Asteroid(CircleShape):
         self.kill()
 
         if self.radius <= ASTEROID_MIN_RADIUS:
+
             return
         else:
             angle = random.uniform(20, 50)
@@ -32,5 +33,6 @@ class Asteroid(CircleShape):
             neg_asteroid.velocity = neg * 1.2
 
     def scoreupdated(self, score):
-        level = (score // 100)
-        self.velocity *= 1 + (level * 0.025)
+        if score % 100 == 0:
+            level = (score // 100)
+            self.velocity *= 1 + (level * 0.025)
