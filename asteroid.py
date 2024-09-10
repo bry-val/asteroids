@@ -30,3 +30,7 @@ class Asteroid(CircleShape):
             neg_asteroid = Asteroid(self.position.x, self.position.y, new_radius)
             pos_asteroid.velocity = pos * 1.2
             neg_asteroid.velocity = neg * 1.2
+
+    def scoreupdated(self, score):
+        level = (score // 100)
+        self.velocity *= 1 + (level * 0.025)
