@@ -16,7 +16,6 @@ def main():
     clock = pygame.time.Clock()
 
     dt = 0
-    score = 0
     # intention is to use difficulty as scaler for velocity.w
     # difficulty = (score // 1000) + 1
 
@@ -35,8 +34,8 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     astfield = AsteroidField()
 
-    custom_font = pygame.font.Font(pygame.font.get_default_font(), 36)
-    hello_button = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (200, 100)), text=f"Score: {score.score}", manager=manager, )
+    score_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (300, 100)), text=f"Score: {score.score}", manager=manager, )
+    lives = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((SCREEN_WIDTH - 350, 0), (300, 100)), text=f"Lives: {player.lives}", manager=manager, )
 
     is_running = True
 
@@ -46,7 +45,7 @@ def main():
             if event.type == pygame.QUIT:
                 is_running = False
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == hello_button:
+                if event.ui_element == score_text:
                     print('Hello World!')
 
             manager.process_events(event)
@@ -55,22 +54,27 @@ def main():
         screen.fill(color="black")
         manager.draw_ui(screen)
         
-
-        # print(f"Len of {len(updatable)}")
+        score.register_observer(astfield)
 
         for u in updatable:
             u.update(dt)
         for a in asteroids:
-            score.register_observer(a)
             for s in shots:
                 if a.collision(s):
                     s.kill()
                     a.split()
-                    score.increase_score(10)
-                    hello_button.set_text(f"Score: {score.score}")
+                    score.increase_score(100)
+                    score_text.set_text(f"Score: {score.score}")
             if a.collision(player):
-                print(f"\n\t\tGame over!\t\t\n\t\tScore: {score.score}\n")
-                return
+                a.kill()
+                print(player.lives)
+                if player.lives <= 0:
+                    print(f"\n\t\tGame over!\t\t\n\t\tScore: {score.score}\n")
+                    return
+                else:
+                    player.lives -= 1
+                    lives.set_text(f"Lives: {player.lives}")
+
         
         for d in drawable:
             d.draw(screen)

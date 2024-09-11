@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from asteroid import Asteroid
 from constants import *
 
@@ -31,6 +32,7 @@ class AsteroidField(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.spawn_timer = 0.0
+        self.multiplier = 1.0
 
     def spawn(self, radius, position, velocity):
         asteroid = Asteroid(position.x, position.y, radius)
@@ -43,9 +45,19 @@ class AsteroidField(pygame.sprite.Sprite):
 
             # spawn a new asteroid at a random edge
             edge = random.choice(self.edges)
-            speed = random.randint(40, 100)
+            speed = random.randint(40, 100) * self.multiplier
+            print(self.multiplier)
             velocity = edge[0] * speed
             velocity = velocity.rotate(random.randint(-30, 30))
             position = edge[1](random.uniform(0, 1))
             kind = random.randint(1, ASTEROID_KINDS)
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)
+    
+    def scoreupdated(self, score):
+        if score % 1500 == 0:
+            level = score // 1500
+            max_multiplier = 3.0
+            growth_factor = 0.05  # Adjust this to control how quickly the speed multiplier increases
+            
+            # Exponential decay towards max_multiplier
+            self.multiplier = 1 + (max_multiplier - 1) * (1 - math.exp(-growth_factor * level))
