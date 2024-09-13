@@ -8,7 +8,7 @@ class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
 
-        self.lives = 3
+        self.lives = 2
         self.rotation = 0
         self.timer = 0
     

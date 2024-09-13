@@ -13,3 +13,13 @@ class Shot(CircleShape):
         
     def update(self, dt):
         self.position += self.velocity * dt
+
+        if self.position.y > SCREEN_HEIGHT + SHOT_RADIUS:
+            self.position.y = 0 - SHOT_RADIUS
+        elif self.position.y < 0 - SHOT_RADIUS:
+            self.position.y = SCREEN_HEIGHT + SHOT_RADIUS
+
+        if self.position.x > SCREEN_WIDTH + SHOT_RADIUS:
+            self.position.x = 0 - SHOT_RADIUS
+        elif self.position.x < 0 - SHOT_RADIUS:
+            self.position.x = SCREEN_WIDTH + SHOT_RADIUS
