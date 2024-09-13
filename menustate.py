@@ -79,4 +79,4 @@ class Menu(States):
 
         # Draw the scaled surface centered on the screen
         screen.blit(scaled_surface, (center_x, center_y))
-        screen.blit(creds, (SCREEN_WIDTH - 575, SCREEN_HEIGHT - 50))
+        screen.blit(creds, (SCREEN_WIDTH // 3 - 30, SCREEN_HEIGHT - 50))

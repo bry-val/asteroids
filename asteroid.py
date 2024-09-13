@@ -10,6 +10,10 @@ class Asteroid(CircleShape):
         self.num_vertices = random.randint(6, 12)  # Number of vertices for the polygon
         self.jaggedness = random.uniform(0.7, 1.3)  # Controls how jagged the polygon is
         self.vertices = self.generate_vertices()  # Generates the polygon vertices once
+        self.explosion = pygame.mixer.Sound('explode.mp3')
+        self.explosion.set_volume(0.4)
+
+        self.ttl = ASTEROID_TTL
 
     def generate_vertices(self):
         vertices = []
@@ -30,6 +34,11 @@ class Asteroid(CircleShape):
         # pygame.draw.circle(screen, "red", self.position, self.radius, 1)
 
     def update(self, dt):
+        self.ttl -= dt
+
+        if self.ttl <= 0:
+            self.kill() 
+
         self.position += self.velocity * dt
 
         if self.position.y > SCREEN_HEIGHT + ASTEROID_MAX_RADIUS:

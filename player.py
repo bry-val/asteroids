@@ -16,11 +16,14 @@ class Player(CircleShape):
         self.rotation = 0
         self.rotation_velocity = 0
         self.rotation_damping = 0.95  # How much rotation slows down per frame
-        self.rotation_acceleration = 350  # Acceleration when rotating
+        self.rotation_acceleration = 800  # Acceleration when rotating
         self.timer = 0
         self.velocity = pygame.Vector2(0, 0)
         self.acceleration = 300  # Acceleration rate
         self.deceleration = 0.98  # Deceleration rate
+
+        self.death_sound = pygame.mixer.Sound('death2.mp3')
+        self.death_sound.set_volume(0.5)
     
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -106,6 +109,7 @@ class Player(CircleShape):
 
     def shoot(self):
         shot = Shot(self.position.x, self.position.y)
+        shot.shotsound.play()
         shot.velocity += pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
 
     def collides_with_circle(self, circle):

@@ -13,12 +13,15 @@ class Game(States):
     def __init__(self) -> None:
         super().__init__()
         self.next = 'menu'
+        self.ambience = pg.mixer.Sound('bg.mp3')
     
     def cleanup(self):
         self.score.score = 0
 
     def startup(self):
         pg.init()
+        self.ambience.set_volume(0.26)
+        self.ambience.play(-1)
         self.updatable = pg.sprite.Group()
         self.drawable = pg.sprite.Group()
         self.asteroids = pg.sprite.Group()
@@ -90,6 +93,7 @@ class Game(States):
         for a in self.asteroids:
             for s in self.shots:
                 if a.collision(s):
+                    a.explosion.play()
                     s.kill()
                     a.split()
                     self.score.increase_score(100)
@@ -97,6 +101,7 @@ class Game(States):
             
             if self.player.collides_with_circle(a):  # Updated to use the polygonal collision check
                 a.kill()
+                self.player.death_sound.play()
                 print(self.player.lives)
                 if self.player.lives <= 0:
                     self.done = True

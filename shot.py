@@ -6,6 +6,8 @@ class Shot(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, SHOT_RADIUS)
         self.ttl = SHOT_TTL
+        self.shotsound = pygame.mixer.Sound('shot2.mp3')
+        self.shotsound.set_volume(0.16)
 
     def draw(self, screen):
     # print(f"time: {time.time()}\nself.x: {self.x}\nself.y {self.y}\nvelo: {self.velocity}\nradius: {self.radius}")
