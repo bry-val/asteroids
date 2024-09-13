@@ -4,6 +4,7 @@ from asteroidfield import AsteroidField
 from player import Player
 from score import Score
 from shot import Shot
+from starlayer import StarLayer
 from states import States
 from constants import *
 import pygame as pg
@@ -23,6 +24,7 @@ class Game(States):
         self.asteroids = pg.sprite.Group()
         self.shots = pg.sprite.Group()
         self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_path='theme.json')
+        self.star_layers = [StarLayer(speed, NUM_STARS) for speed in PARALLAX_SPEEDS]
 
 
         Asteroid.containers = (self.asteroids, self.updatable, self.drawable)
@@ -53,11 +55,38 @@ class Game(States):
         print(f"Number of asteroids: {len(self.asteroids)}")
         self.draw(screen)
 
+        for layer in self.star_layers:
+            layer.update(dt)
+            layer.draw(screen)
+        
+
         self.manager.update(dt)
         self.manager.draw_ui(screen)
 
+        # for u in self.updatable:
+        #     u.update(dt)
+        # for a in self.asteroids:
+        #     for s in self.shots:
+        #         if a.collision(s):
+        #             s.kill()
+        #             a.split()
+        #             self.score.increase_score(100)
+        #             self.score_text.set_text(f"Score: {self.score.score}")
+        #     if a.collision(self.player):
+        #         a.kill()
+        #         print(self.player.lives)
+        #         if self.player.lives <= 0:
+        #             self.done = True
+        #             States.score = self.score.score
+        #             print(f"\n\t\tGame over!\t\t\n\t\tScore: {self.score.score}\n")
+        #             return
+        #         else:
+        #             self.player.lives -= 1
+        #             self.lives.set_text(f"Lives: {self.player.lives + 1}")
+
         for u in self.updatable:
             u.update(dt)
+
         for a in self.asteroids:
             for s in self.shots:
                 if a.collision(s):
@@ -65,7 +94,8 @@ class Game(States):
                     a.split()
                     self.score.increase_score(100)
                     self.score_text.set_text(f"Score: {self.score.score}")
-            if a.collision(self.player):
+            
+            if self.player.collides_with_circle(a):  # Updated to use the polygonal collision check
                 a.kill()
                 print(self.player.lives)
                 if self.player.lives <= 0:
